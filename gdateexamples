@@ -1,0 +1,6 @@
+#!/bin/bash -x
+gdate
+gdate +%S.%N 
+gdate +%S.%3N
+gdate +%N
+gdate +%3N

@@ -1,0 +1,59 @@
+# TODO MAKE THIS GENERIC for something like "AT xxx SAY yyyy"
+#
+# previous time commands showed say performance at 4.63 sec for this sequence;
+# (say "on your marks?"; sleep 1 ; say "ready?"& sleep 1; say "set?"& sleep 1; say "go"; date)
+#
+# thus we wait till 55.4 ..
+#
+# here's crude way:
+#
+# alias sleeptill554='while [ 1 ] ; do s=$(date +%-S) ; if [ "$s" == "55" ] ; then echo "" & sleep .3 ; break ; fi ; sleep 0.1 ; echo -n "." ; done'
+#
+# sleeptill554; time (say "on your marks?"; sleep 1 ; say "ready?"& sleep 1; say "set?"& sleep 1; say "go"; date)
+#
+#
+# now changed it to just look at performance of "say go"
+# time command shows: time (say go) ~= .551 sec 
+# 
+# quick audacity of GO audio segment is 0.362 length
+# 
+# if time is .551 then startup say overhead is .189
+# thus we ned to subtract .189 from top of time.
+#
+# Use gdate to get nano sec on Mac.  use %3N to get only millis
+#
+# $ ./gdateexamples 
+# + gdate
+# Sun Jun 26 14:00:47 EDT 2016
+# + gdate +%S.%N
+# 47.598756000
+# + gdate +%S.%3N
+# 47.602
+# + gdate +%N
+# 606766000
+# + gdate +%3N
+# 611
+#
+
+# Here we go, waiting for minute 59...
+#
+while [ 1 ] ; do 
+    s=$(gdate +%S) ; 
+    if [ "$s" == "59" ] ; then 
+        while [ 1 ] ; do 
+            n=$(gdate +%3N) ; 
+            if [ "$n" -ge "811" ] ; then 
+                say "go" ; 
+                echo -e -n "\r$(gdate +%S)"
+                break ; 
+            fi ; 
+        done ; 
+    else 
+        if [ "$(gdate +%1N)" == "0" ] ; then 
+            echo -e -n "\r$(gdate +%S)"
+        fi
+    fi ;
+    sleep 0 ; 
+done
+
+
