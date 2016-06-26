@@ -37,8 +37,15 @@
 
 # Here we go, waiting for minute 59...
 #
+
+olds=""
 while [ 1 ] ; do 
     s=$(gdate +%S) ; 
+    if [ "$s" != "$olds" ] ; then
+        echo -e -n "\r$s"
+        olds=$s
+    fi
+    n=$(gdate +%2N) ; 
     if [ "$s" == "59" ] ; then 
         while [ 1 ] ; do 
             n=$(gdate +%3N) ; 
@@ -48,12 +55,7 @@ while [ 1 ] ; do
                 break ; 
             fi ; 
         done ; 
-    else 
-        if [ "$(gdate +%1N)" == "0" ] ; then 
-            echo -e -n "\r$(gdate +%S)"
-        fi
     fi ;
-    sleep 0 ; 
 done
 
 
